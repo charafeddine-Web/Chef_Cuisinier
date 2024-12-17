@@ -24,7 +24,7 @@ body {
     width: 80%;
     max-width: 1100px;
     background: rgba(0, 0, 0, 0.4);
-    padding: 2rem;
+    padding: 8rem;
     border-radius: 10px;
     gap: 2rem;
 }
@@ -51,6 +51,7 @@ body {
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    
 }
 
 form input {

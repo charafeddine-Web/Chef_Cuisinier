@@ -162,7 +162,7 @@ require('./connection.php');
 		</div>
 		<div class="row bg-light">
 			<?php 
-			$sql="SELECT * from Menu where Status=''";
+			$sql="SELECT * from Menu where Status= ? ";
 			$stmt=$connect->prepare($sql);
 			$status = 'Active';
 			$stmt->bind_param("s", $status); 
@@ -177,14 +177,14 @@ require('./connection.php');
 					echo "<div class='card view zoom'>";
 					echo "<img class='card-img-top img-fluid ' src=" . $menu['MenuImage'] .">";
 					echo "<div class='card-body'>";
-					echo "<h5 class='card-title'>~  " . $menu['Title'] . " ~</h5>";
+					echo "<h5 class='card-title'>~" . $menu['Title'] . "~</h5>";
 					echo "<ul class='list-group list-group-flush'>";
 					echo "<li class='list-group-item'>". $menu['Description'] ."</li>";
 					echo "<li class='list-group-item'> " . $menu['Price'] . "</li>";
 					echo "<li class='list-group-item'>" . $menu['Status'] . "</li>";
 					echo "<li class='list-group-item'>Veal with tuna sauce</li>";
 					echo "<li class='list-group-item'>Marinated turkey breast with olives</li>";
-					echo"	</ul>";
+					echo"</ul>";
 					echo "</div>" ;
 					echo "</div>";
 					echo "</div>";
@@ -195,41 +195,7 @@ require('./connection.php');
 			$stmt->close();			
 			?>
 			
-			<div class="col-md-4" data-aos="slide-up">
-				<div class="card">
-					<img class="card-img-top img-fluid " src="images/fish-menu.jpg">
-					<div class="card-body">
-						<h5 class="card-title">~ Fish Menu ~</h5>
-						<ul class="list-group list-group-flush">
-							<li class="list-group-item">Octopus carpaccio</li>
-							<li class="list-group-item">Mussels in green sauce</li>
-							<li class="list-group-item">Shrimp cocktail</li>
-							<li class="list-group-item">Risotto with scampi cream</li>
-							<li class="list-group-item">Fish ravioli with scampi cream</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4" data-aos="slide-up">
-				<div class="card">
-					<img class="card-img-top img-fluid" src="images/menu-vegetarian.jpg">
-					<div class="card-body">
-						<h5 class="card-title">~ Vegetarian Menu ~</h5>
-						<ul class="list-group list-group-flush">
-							<li class="list-group-item">Eggplant Parmigiana
-							</li>
-							<li class="list-group-item">Strudel with Ricotta and Spinach
-							</li>
-							<li class="list-group-item">Spinach and Ricotta Meatballs
-							</li>
-							<li class="list-group-item">Baked Potato Omelette
-							</li>
-							<li class="list-group-item">Spaghetti with Vegetarian Meatballs
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+			
 		</div>
 		<!--- End of Menu -->
 		<!--- Start of Reservation-->

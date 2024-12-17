@@ -13,13 +13,13 @@ if($_SERVER['REQUEST_METHOD']== 'POST' && $_POST['submit']){
         $Errors[]="pleas All fiel Field ?";
     }
 
+    $sql="INSERT into users (fullname,phone,email,password) values ('?','?','?','?') ";
 
+    $stmt=$connect->prepare($sql);
 
-
-
-
-
-
+    $stmt->bind_param('ssss',$fullname,$phone,$email,$password);
+    $stmt->execute();
+    $stmt->close();
 
 
 } 
@@ -111,7 +111,7 @@ if($_SERVER['REQUEST_METHOD']== 'POST' && $_POST['submit']){
             </form>
         </div>
     </div>
-    <footer class="container">
+    <!-- <footer class="container">
 		<div class="row only-mobile">
 			<div class="col-6">
 				<a class="btn btn-primary btn-block text-center" href="tel:++390000000"><i class="fa fa-phone"
@@ -123,7 +123,7 @@ if($_SERVER['REQUEST_METHOD']== 'POST' && $_POST['submit']){
 						aria-hidden="true"></i> Whatsapp</a>
 			</div>
 		</div>
-	</footer>
+	</footer> -->
     <script src="js/jquery-3.3.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
 		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
