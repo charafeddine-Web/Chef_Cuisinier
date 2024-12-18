@@ -1,3 +1,5 @@
+
+
 <?php
 require('./connection.php');
 session_start();
@@ -10,6 +12,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chef Charaf Din - Fine Dining Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
 <body class="bg-gray-50 font-sans">
@@ -26,55 +29,53 @@ session_start();
 
                 <div class="hidden md:flex space-x-6">
                     <a href="#chef" class="text-gray-700 hover:text-blue-600 transition">Chef</a>
-                    <a href="#Menu" class="text-gray-700 hover:text-blue-600 transition">Menu</a>
-                    <a href="#Reservation" class="text-gray-700 hover:text-blue-600 transition">Reservation</a>
+                    <a href="#Menu" class="menus text-gray-700 hover:text-blue-600 transition">Menu</a>
+                    <a href="#Reservation" class="reservations text-gray-700 hover:text-blue-600 transition">Reservation</a>
                 </div>
 
                 <div class="flex items-center space-x-4">
                     <?php if (isset($_SESSION['full_Name']) || isset($_SESSION['email'])): ?>
-                        <div class="relative cursor-pointer group">
+                        <div class="relative group">
                             <p class="text-gray-800 font-semibold text-lg">
-                                <?= htmlspecialchars($_SESSION['full_Name'], ENT_QUOTES, 'UTF-8'); ?></p>
+                                <?= htmlspecialchars($_SESSION['full_Name'], ENT_QUOTES, 'UTF-8'); ?>
+                            </p>
                             <p class="text-gray-600"><?= htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8'); ?></p>
-
-                            <div id="user-info"
-                                class="hidden absolute top-full left-0 mt-4 bg-white p-6 rounded-lg shadow-lg max-w-sm w-full transition-all group-hover:block">
-                                <!-- <div class="text-center mb-4">
-                                <img src="path_to_image/<?= htmlspecialchars($_SESSION['MenuImage'], ENT_QUOTES, 'UTF-8'); ?>.png" alt="User Image" class="w-24 h-24 rounded-full mx-auto border-4 border-blue-600">
-                            </div> -->
-                                <p class="text-gray-700 text-sm">Welcome back,
-                                    <?= htmlspecialchars($_SESSION['full_Name'], ENT_QUOTES, 'UTF-8'); ?></p>
+                            <div class="hidden absolute top-full left-0 mt-4 bg-white p-6 rounded-lg shadow-lg max-w-sm w-full group-hover:block">
+                                <p class="text-gray-700 text-sm">Welcome back, <?= htmlspecialchars($_SESSION['full_Name'], ENT_QUOTES, 'UTF-8'); ?></p>
                             </div>
                         </div>
                     <?php else: ?>
                         <p class="text-gray-600">Welcome, Guest!</p>
                     <?php endif; ?>
                 </div>
+
                 <div class="md:hidden">
                     <button id="mobile-menu-button" class="text-gray-700 hover:text-blue-600">
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16m-7 6h7" />
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
+        <div id="mobile-menu" class="hidden bg-white shadow-md">
             <a href="#chef" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">Chef</a>
-            <a href="#Menu" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">Menu</a>
-            <a href="#Reservation" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">Reservation</a>
+            <a href="#Menu" class="menus block px-4 py-2 text-gray-700 hover:bg-blue-100">Menu</a>
+            <a href="#Reservation" class="reservations block px-4 py-2 text-gray-700 hover:bg-blue-100">Reservation</a>
         </div>
     </nav>
 
+    
+
+    <!-- Sections (e.g., About, Menu, Reservations) -->
     <section id="about" class="py-16 bg-gray-100">
         <div class="max-w-5xl mx-auto text-center">
             <h2 class="text-3xl font-bold text-gray-800 mb-6">Meet Chef Charaf Din</h2>
-            <p class="text-gray-600">With years of experience in the culinary arts, Chef Charaf Din specializes in
-                creating extraordinary dishes that blend traditional flavors with modern techniques. Every dish is a
-                work of art, crafted with passion and precision.</p>
+            <p class="text-gray-600">
+                With years of experience in the culinary arts, Chef Charaf Din specializes in creating extraordinary dishes 
+                that blend traditional flavors with modern techniques. Every dish is a work of art, crafted with passion and precision.
+            </p>
         </div>
     </section>
 
@@ -87,7 +88,6 @@ session_start();
                 <?php
                 $sql = "SELECT * FROM Menu";
                 $stmt = $connect->prepare($sql);
-
                 if ($stmt->execute()) {
                     $result = $stmt->get_result();
                     if ($result->num_rows > 0) {
@@ -112,177 +112,48 @@ session_start();
             </div>
         </div>
     </section>
-
-
-    <div
-        class="reservation inline-block min-w-full hidden overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg p-8">
-        <table class="min-w-full">
-            <thead>
+    <div id="reservation" class="min-w-full hidden overflow-hidden bg-white shadow-md sm:rounded-lg p-6 mt-10">
+    <div class="text-xl font-bold mb-4">
+        <p>Menu Table</p>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border-collapse border border-gray-300">
+            <thead class="bg-gray-100">
                 <tr>
-                    <th
-                        class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                        Name</th>
-                    <th
-                        class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                        Title</th>
-                    <th
-                        class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                        Status</th>
-                    <th
-                        class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                        Role</th>
-                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border border-gray-300">MenuID</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border border-gray-300">Title</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border border-gray-300">Description</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border border-gray-300">Price</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border border-gray-300">Status</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border border-gray-300">Menu Image</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border border-gray-300">ChefID</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border border-gray-300">Actions</th>
                 </tr>
             </thead>
-
-            <tbody class="bg-white">
-                <tr>
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 w-10 h-10">
-                                <img class="w-10 h-10 rounded-full"
-                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
-                                    alt="">
-                            </div>
-
-                            <div class="ml-4">
-                                <div class="text-sm font-medium leading-5 text-gray-900">John Doe
-                                </div>
-                                <div class="text-sm leading-5 text-gray-500">john@example.com</div>
-                            </div>
-                        </div>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2 text-sm text-gray-700 border border-gray-300">1</td>
+                    <td class="px-4 py-2 text-sm text-gray-700 border border-gray-300">Pasta</td>
+                    <td class="px-4 py-2 text-sm text-gray-700 border border-gray-300">
+                        Delicious Italian pasta with fresh ingredients.
                     </td>
-
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="text-sm leading-5 text-gray-900">Software Engineer</div>
-                        <div class="text-sm leading-5 text-gray-500">Web dev</div>
+                    <td class="px-4 py-2 text-sm text-gray-700 border border-gray-300">$12.99</td>
+                    <td class="px-4 py-2 text-sm text-green-600 border border-gray-300">Active</td>
+                    <td class="px-4 py-2 text-sm border border-gray-300">
+                        <img class="w-16 h-16 object-cover rounded" src="https://via.placeholder.com/150" alt="Menu Image">
                     </td>
-
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <span
-                            class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">Active</span>
-                    </td>
-
-                    <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                        Owner</td>
-
-                    <td
-                        class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                    <td class="px-4 py-2 text-sm text-gray-700 border border-gray-300">101</td>
+                    <td class="px-4 py-2 text-sm text-gray-700 border border-gray-300">
+                        <button class="text-blue-600 hover:underline hover:text-blue-800">Edit</button>
+                        <button class="ml-2 text-red-600 hover:underline hover:text-red-800">Cancel</button>
                     </td>
                 </tr>
-                <tr>
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 w-10 h-10">
-                                <img class="w-10 h-10 rounded-full"
-                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
-                                    alt="">
-                            </div>
-
-                            <div class="ml-4">
-                                <div class="text-sm font-medium leading-5 text-gray-900">John Doe
-                                </div>
-                                <div class="text-sm leading-5 text-gray-500">john@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="text-sm leading-5 text-gray-900">Software Engineer</div>
-                        <div class="text-sm leading-5 text-gray-500">Web dev</div>
-                    </td>
-
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <span
-                            class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">Active</span>
-                    </td>
-
-                    <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                        Owner</td>
-
-                    <td
-                        class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 w-10 h-10">
-                                <img class="w-10 h-10 rounded-full"
-                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
-                                    alt="">
-                            </div>
-
-                            <div class="ml-4">
-                                <div class="text-sm font-medium leading-5 text-gray-900">John Doe
-                                </div>
-                                <div class="text-sm leading-5 text-gray-500">john@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="text-sm leading-5 text-gray-900">Software Engineer</div>
-                        <div class="text-sm leading-5 text-gray-500">Web dev</div>
-                    </td>
-
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <span
-                            class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">Active</span>
-                    </td>
-
-                    <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                        Owner</td>
-
-                    <td
-                        class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 w-10 h-10">
-                                <img class="w-10 h-10 rounded-full"
-                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
-                                    alt="">
-                            </div>
-
-                            <div class="ml-4">
-                                <div class="text-sm font-medium leading-5 text-gray-900">John Doe
-                                </div>
-                                <div class="text-sm leading-5 text-gray-500">john@example.com</div>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="text-sm leading-5 text-gray-900">Software Engineer</div>
-                        <div class="text-sm leading-5 text-gray-500">Web dev</div>
-                    </td>
-
-                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <span
-                            class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">Active</span>
-                    </td>
-
-                    <td class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                        Owner</td>
-
-                    <td
-                        class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                    </td>
-                </tr>
-
             </tbody>
         </table>
     </div>
+</div>
 
-
-    <section id="contact" class="py-16 bg-gray-800 text-white">
+    <section id="contact" class="py-16 bg-gray-800 text-white px-10">
         <div class="max-w-5xl mx-auto text-center">
             <h2 class="text-3xl font-bold mb-6">Get in Touch</h2>
             <p class="mb-4">For reservations or inquiries, feel free to reach out to us.</p>
@@ -303,7 +174,6 @@ session_start();
             <p>&copy; 2024 Chef Charaf Din. All Rights Reserved.</p>
         </div>
     </footer>
-
     <script>
         // const userInfoToggle = document.getElementById('user-info-toggle');
         // const userInfo = document.getElementById('user-info');
@@ -311,21 +181,33 @@ session_start();
         // userInfoToggle.addEventListener('click', () => {
         //     userInfo.classList.toggle('hidden');
         // });
-
-        // const reservation = document.getElementById('reservation');
-        // const menu=document.getElementById('menu');
-
-        // mobileMenuButton.addEventListener('click', () => {
-        //     mobileMenu.classList.toggle('hidden');
-        // });
-
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuButton.addEventListener('click', () => {
+        document.getElementById('mobile-menu-button').addEventListener('click', function () {
+            const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         });
+
+
+        const buttonmenu=document.querySelectorAll('.menus');
+        const buttonreservation=document.querySelectorAll('.reservations');
+
+        buttonmenu.forEach(e => {
+            e.addEventListener('click', () => {
+            document.getElementById('reservation').classList.toggle('hidden');
+            document.getElementById('menu').classList.toggle('hidden');
+            document.getElementById('about').classList.toggle('hidden');
+        });
+        });
+
+        buttonreservation.forEach(e => {
+            e.addEventListener('click', () => {
+            document.getElementById('reservation').classList.toggle('hidden');
+            document.getElementById('menu').classList.toggle('hidden');
+            document.getElementById('about').classList.toggle('hidden');
+
+            
+        });
+        });
+
     </script>
 </body>
-
 </html>
