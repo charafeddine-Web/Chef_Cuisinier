@@ -49,16 +49,13 @@ require('./connection.php');
 					<li class="nav-item">
 						<a class="nav-link" href="#OurLocation">Our Location</a>
 					</li>
-					<!-- <li class="nav-item">
-							<a href="#" class="language" rel="it-IT"><img src="images/italy.ico" class="flag" alt="Italiano"></a>
-							<a href="index.html" class="language" rel="en-En"><img src="images/english.ico" class="flag" alt="English"></a>
-						</li> -->
+				
 					<li>
 						<div class="logindiv">
-							<a href="./php/sginIn.php" class=" mx-2 sm:mx-4 "
+							<a href="./sginIn.php" class=" mx-2 sm:mx-4 "
 								style="text-decoration: none;color:Black">Sign In</a>
 							<button class="signup px-4 py-2 border-2 ">
-								<a href="./php/SginUp.php" style="text-decoration: none;color:Black">Sign Up</a>
+								<a href="./SginUp.php" style="text-decoration: none;color:Black">Sign Up</a>
 							</button>
 						</div>
 
@@ -171,8 +168,9 @@ require('./connection.php');
 			$result = $stmt->get_result();
 
 			if ($result->num_rows > 0) {
+				$count=0;
 				while ($menu = $result->fetch_assoc()) {
-		
+					if ($count >= 3) break;
 					echo"<div class='col-md-4' data-aos='slide-up'>";
 					echo "<div class='card view zoom'>";
 					echo "<img class='card-img-top img-fluid ' src=" . $menu['MenuImage'] .">";
@@ -180,14 +178,13 @@ require('./connection.php');
 					echo "<h5 class='card-title'>~" . $menu['Title'] . "~</h5>";
 					echo "<ul class='list-group list-group-flush'>";
 					echo "<li class='list-group-item'>". $menu['Description'] ."</li>";
-					echo "<li class='list-group-item'> " . $menu['Price'] . "</li>";
+					echo "<li class='list-group-item'> " . $menu['Price'] . "$</li>";
 					echo "<li class='list-group-item'>" . $menu['Status'] . "</li>";
-					echo "<li class='list-group-item'>Veal with tuna sauce</li>";
-					echo "<li class='list-group-item'>Marinated turkey breast with olives</li>";
 					echo"</ul>";
 					echo "</div>" ;
 					echo "</div>";
 					echo "</div>";
+					$count++; 
 				}
 			} else {
 				echo "Aucun menu trouvé.<br>";
