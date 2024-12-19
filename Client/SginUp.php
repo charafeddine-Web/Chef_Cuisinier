@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         if ($stmt->execute()) {
 			$_SESSION['full_Name']=$fullname;
 			$_SESSION['email']=$email;
-            header('Location: dashboard.php');
+            header('Location: ./dashboard.php');
             exit();
         } else {
             $Errors[] = "Error: " . $stmt->error;

@@ -36,7 +36,15 @@ create table Plates(
     PlatePrice float not null,
     PlateImage varchar(255),
     MenuID int not null,
-    foreign key (MenuID) references Menu(MenuID)
+    foreign key (MenuID) references Menu(MenuID)ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE PlatesMenu (
+    MenuID INT NOT NULL,
+    PlateID INT NOT NULL,
+    PRIMARY KEY (MenuID, PlateID),
+    FOREIGN KEY (MenuID) REFERENCES Menu(MenuID) ON DELETE CASCADE,
+    FOREIGN KEY (PlateID) REFERENCES Plates(PlateID) ON DELETE CASCADE
 );
 
 
