@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
     header('Location: ../Client/sginIn.php');
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,8 +93,9 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                             <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"></path>
                         </svg>
+                   
                     </button>
-    
+                
                     <div class="relative mx-4 lg:mx-0">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                             <svg class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none">
@@ -110,8 +112,6 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                 </div>
     
                 <div class="flex items-center">
-                    
-    
                     <div x-data="{ dropdownOpen: false }" class="relative">
                         <button @click="dropdownOpen = ! dropdownOpen"
                             class="relative block w-8 h-8 overflow-hidden rounded-full shadow focus:outline-none">
@@ -119,21 +119,64 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                                 src="https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=296&amp;q=80"
                                 alt="Your avatar">
                         </button>
-    
+                        <?php if ( isset($_SESSION['email'])): ?>
+                                <div class="relative group">
+                                    <p class="text-gray-600">Welcome back, <?= htmlspecialchars($_SESSION['full_Name']); ?></p>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-gray-600">Welcome, Guest!</p>
+                        <?php endif; ?>
                         <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 z-10 w-full h-full"
                             style="display: none;"></div>
     
                         <div x-show="dropdownOpen"
                             class="absolute right-0 z-10 w-48 mt-2 overflow-hidden bg-white rounded-md shadow-xl"
                             style="display: none;">
-                            <a href="#"
+                            <a id="profile" href="#"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Profile</a>
-                            <a href="#"
+                            <a href="Logout.php"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Logout</a>
                         </div>
                     </div>
                 </div>
             </header>
+            <div id="profileForm"
+                    class="hidden fixed inset-0 flex items-center justify-center z-50 bg-gray-700 bg-opacity-50">
+                    <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+                    <div class="flex justify-between">
+                        <h1 class="text-2xl font-bold text-center mb-1">Modifier les Informations du Chef</h1>
+                        <strong id="close" class="bg-red-500 p-2 rounded cursor-pointer">X</strong>
+                        </div>
+                        <form action="update_profile.php" method="POST" enctype="multipart/form-data" class="space-y-4 mt-2">
+                            <div>
+                                <label for="fullName" class="block text-sm font-semibold">Nom Complet</label>
+                                <input type="text" id="fullName" name="fullName" required
+                                    class="w-full px-4 py-2 mt-2 border rounded-md"
+                                    value="<?= $_SESSION['full_Name'] ?? ''; ?>" />
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-sm font-semibold">Email</label>
+                                <input type="email" id="email" name="email" required
+                                    class="w-full px-4 py-2 mt-2 border rounded-md"
+                                    value="<?= $_SESSION['email'] ?? ''; ?>" />
+                            </div>
+
+                            <div>
+                                <label for="profileImage" class="block text-sm font-semibold">Image de Profil</label>
+                                <input type="file" id="profileImage" name="profileImage"
+                                    class="w-full px-4 py-2 mt-2 border rounded-md" />
+                            </div>
+
+                            <div class="flex justify-center">
+                                <button type="submit" name="submit"
+                                    class="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                    Modifier
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
                 <div class="container px-6 py-8 mx-auto">
                     <h3 class="text-3xl font-medium text-gray-700">Clients</h3>
@@ -252,5 +295,7 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
         </div>
     </div>
 </div>
+<script src="./js/index.js"></script>
+
 </body>
 </html>

@@ -20,11 +20,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $description = trim(htmlspecialchars($_POST['description']));
     $price = trim(htmlspecialchars($_POST['price']));
     $status = $_POST['status'];
-    $selectedPlates = $_POST['plates'] ?? []; 
+    $selectedPlates = $_POST['plates'] ?? [];
 
-    $sql = "INSERT INTO Menu (Title, Description, Price, Status, chef_id) VALUES (?, ?, ?, ?, ?)";
+    if (isset($_FILES['MenuImage']) && $_FILES['MenuImage']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['MenuImage']['tmp_name'];
+        $fileName = $_FILES['MenuImage']['name'];
+        $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        if (in_array($fileExtension, $allowedExtensions)) {
+            $uploadDir = '../Client/images/';
+            $uploadPath = $uploadDir . $_FILES['MenuImage']['name'] ;
+            $upload=move_uploaded_file($fileTmpPath, $uploadPath);
+            if (!$upload) {
+                echo "Failed to move the uploaded file.";
+                exit;
+            }
+        } else {
+            echo "Invalid file type. Allowed types: " . implode(', ', $allowedExtensions);
+            exit;
+        }
+    } else {
+        echo "Error with file upload.";
+        exit;
+    }
+
+    $sql = "INSERT INTO menu (Title, Description, Price, Status,MenuImage, chef_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $connect->prepare($sql);
-    $stmt->bind_param('ssdsi', $title, $description, $price, $status, $_SESSION['user_id']);
+    $stmt->bind_param('ssdssi', $title, $description, $price, $status,$uploadPath , $_SESSION['user_id']);
     $stmt->execute();
 
     $menuID = $stmt->insert_id;
@@ -37,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         $stmt->execute();
         $stmt->close();
     }
-    header('Location: menus.php'); 
+    header('Location: menus.php');
     exit();
 }
 
@@ -52,39 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Page-Admin</title>
-    <script defer>
-        function addPlateFields() {
-            const plateContainer = document.getElementById('plate-container');
-            const plateCount = plateContainer.children.length;
+    <title>Menu-Admin</title>
 
-            if (plateCount < 3) {
-                const plateForm = `
-                    <div class="bg-gray-50 p-4 border rounded-md mb-4">
-                        <h3 class="font-semibold mb-2">Plate ${plateCount + 1}</h3>
-                        <div class="mb-2">
-                            <label class="block text-sm font-medium text-gray-700">Plate Name</label>
-                            <input type="text" name="plates[${plateCount}][name]" class="w-full border rounded-md p-2" placeholder="Plate Name" required>
-                        </div>
-                        <div class="mb-2">
-                            <label class="block text-sm font-medium text-gray-700">Plate Description</label>
-                            <textarea name="plates[${plateCount}][description]" class="w-full border rounded-md p-2" rows="2" placeholder="Plate Description"></textarea>
-                        </div>
-                        <div class="mb-2">
-                            <label class="block text-sm font-medium text-gray-700">Plate Price</label>
-                            <input type="number" name="plates[${plateCount}][price]" class="w-full border rounded-md p-2" placeholder="Plate Price" required>
-                        </div>
-                        <div class="mb-2">
-                            <label class="block text-sm font-medium text-gray-700">Plate Image</label>
-                            <input type="file" name="plates[${plateCount}][image]" class="w-full border rounded-md p-2">
-                        </div>
-                    </div>`;
-                plateContainer.insertAdjacentHTML('beforeend', plateForm);
-            } else {
-                alert("You can add a maximum of 3 plates.");
-            }
-        }
-    </script>
 </head>
 
 <body>
@@ -173,6 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                                 <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
+
                         </button>
 
                         <div class="relative mx-4 lg:mx-0">
@@ -202,35 +194,93 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                                     src="https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=296&amp;q=80"
                                     alt="Your avatar">
                             </button>
-
+                            <?php if (isset($_SESSION['email'])): ?>
+                                <div class="relative group">
+                                    <p class="text-gray-600">Welcome back, <?= htmlspecialchars($_SESSION['full_Name']); ?>
+                                    </p>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-gray-600">Welcome, Guest!</p>
+                            <?php endif; ?>
                             <div x-show="dropdownOpen" @click="dropdownOpen = false"
                                 class="fixed inset-0 z-10 w-full h-full" style="display: none;"></div>
 
                             <div x-show="dropdownOpen"
                                 class="absolute right-0 z-10 w-48 mt-2 overflow-hidden bg-white rounded-md shadow-xl"
                                 style="display: none;">
-                                <a href="#"
+                                <a id="profile" href="#"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Profile</a>
-                                <a href="#"
+                                <a href="logout.php"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Logout</a>
                             </div>
                         </div>
                     </div>
                 </header>
-                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-                    <div class="container px-6 py-8 mx-auto">
-                        <h3 class="text-3xl font-medium text-gray-700">Menus</h3>
+                <div id="profileForm"
+                    class="hidden fixed inset-0 flex items-center justify-center z-50 bg-gray-700 bg-opacity-50">
+                    <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+                        <div class="flex justify-between">
+                        <h1 class="text-2xl font-bold text-center mb-1">Modifier les Informations du Chef</h1>
+                        <strong id="close" class="bg-red-500 p-2 rounded cursor-pointer">X</strong>
+                        </div>
 
-                        <div class="max-w-4xl mx-auto p-4">
+                        <form action="update_profile.php" method="POST" enctype="multipart/form-data" class="space-y-4 mt-2">
+                            <div>
+                                <label for="fullName" class="block text-sm font-semibold">Nom Complet</label>
+                                <input type="text" id="fullName" name="fullName" required
+                                    class="w-full px-4 py-2 mt-2 border rounded-md"
+                                    value="<?= $_SESSION['full_Name'] ?? ''; ?>" />
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-sm font-semibold">Email</label>
+                                <input type="email" id="email" name="email" required
+                                    class="w-full px-4 py-2 mt-2 border rounded-md"
+                                    value="<?= $_SESSION['email'] ?? ''; ?>" />
+                            </div>
+
+                            <div>
+                                <label for="profileImage" class="block text-sm font-semibold">Image de Profil</label>
+                                <input type="file" id="profileImage" name="profileImage"
+                                    class="w-full px-4 py-2 mt-2 border rounded-md" />
+                            </div>
+
+                            <div class="flex justify-center">
+                                <button type="submit" name="submit"
+                                    class="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                    Modifier
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+                    <div class="container   px-6 py-8 mx-auto">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-3xl font-medium text-gray-700">Menus</h3>
+                            <div class="flex justify-center">
+                                <button id="addmenu"
+                                    class=" px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                    Ajouter Menu
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="form" class=" max-w-4xl mx-auto bg-gray-200  hidden overflow-y-auto  mx-20 p-4">
                             <h1 class="text-3xl font-bold text-center mb-6">Ajouter un Nouveau Menu</h1>
 
-                            <form action="" method="POST" class="space-y-4">
+                            <form action="" method="POST" class="space-y-4" enctype="multipart/form-data">
                                 <div>
                                     <label for="title" class="block text-sm font-semibold">Titre du Menu</label>
                                     <input type="text" id="title" name="title" required
                                         class="w-full px-4 py-2 mt-2 border rounded-md" />
                                 </div>
-
+                                <div>
+                                    <label for="MenuImage" class="block text-sm font-semibold">Image du Menu</label>
+                                    <input type="file" id="MenuImage" name="MenuImage" required
+                                        class="w-full px-4 py-2 mt-2 border rounded-md" />
+                                </div>
+                                
                                 <div>
                                     <label for="description" class="block text-sm font-semibold">Description du
                                         Menu</label>
@@ -286,25 +336,79 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                                             <tr>
                                                 <th
                                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                                    Name</th>
+                                                    Titre</th>
                                                 <th
                                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                                    Title</th>
+                                                    Price</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                                    Description</th>
                                                 <th
                                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                                     Status</th>
                                                 <th
                                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                                    Role</th>
-                                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+                                                    Action</th>
                                             </tr>
                                         </thead>
 
                                         <tbody class="bg-white">
+                                            <?php
+                                            $sql = "SELECT * FROM Menu";
+                                            $result = mysqli_query($connect, $sql);
 
-
+                                            if ($result) {
+                                                if (mysqli_num_rows($result) > 0) {
+                                                    while ($menu = mysqli_fetch_assoc($result)) { ?>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="ml-4">
+                                                                    <div class="text-sm font-medium leading-5 text-gray-900">
+                                                                        <?php echo htmlspecialchars($menu['Title']); ?>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="text-sm leading-5 text-gray-500">
+                                                                    <?php echo htmlspecialchars($menu['Price']); ?>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="text-sm leading-5 text-gray-500">
+                                                                    <?php echo htmlspecialchars($menu['Description']); ?>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="text-sm leading-5 text-gray-900">
+                                                                    <?php echo htmlspecialchars($menu['Status']); ?>
+                                                                </div>
+                                                            </td>
+                                                        
+                                                            <td
+                                                                class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
+                                                                <a href="edit_user.php?id=<?php echo $client['UserID']; ?>"
+                                                                    class="text-green-100 hover:text-green-900 pl-2 bg-green-500 p-2 rounded">Edit</a>
+                                                                <a href="edit_user.php?id=<?php echo $client['UserID']; ?>"
+                                                                    class="text-red-100 hover:text-red-900 pl-2 bg-red-500 p-2 rounded">Delete</a>
+                                                           </td>
+                                                           
+                                                        </tr>
+                                                    <?php }
+                                                } else { ?>
+                                                    <tr>
+                                                        <td colspan="5"
+                                                            class="px-6 py-4 text-center text-sm leading-5 text-gray-500 border-b border-gray-200">
+                                                            No menus found.
+                                                        </td>
+                                                    </tr>
+                                                <?php }
+                                            } else {
+                                                echo "<tr><td colspan='5' class='text-center text-red-600'>Error fetching result: " . mysqli_error($connect) . "</td></tr>";
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
+
                                 </div>
                             </div>
                         </div>
@@ -313,6 +417,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
         </div>
     </div>
+    <script src="./js/index.js"></script>
+    <script>
+        let buttonmenu = document.getElementById('addmenu');
+        let form = document.getElementById('form');
+        buttonmenu.addEventListener('click', () => {
+            form.classList.toggle('hidden');
+        })
+
+    </script>
 </body>
 
 </html>

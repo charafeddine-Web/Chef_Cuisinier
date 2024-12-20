@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
             const password = document.getElementById('password').value;
             const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            if (!passwordRegex.test(password)) {
+            if (!passwordRegex.test(password) || password.length < 8 ) {
                 valid = false;
                 errorMessages.push("Password must be at least 8 characters long and include an uppercase letter, a number, and a special character.");
             }

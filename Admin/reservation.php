@@ -56,7 +56,7 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                     <span class="mx-3">Menus</span>
                 </a>
     
-                <a class="flex items-center px-6 py-2 mt-4 text-gray-100 bg-gray-700 bg-opacity-25"
+                <a class="flex items-center px-6 py-2 mt-4 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
                     href="./clients.php">
                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -67,8 +67,8 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
     
                     <span class="mx-3">Client</span>
                 </a>
-    
-                <a class="flex items-center px-6 py-2 mt-4 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+              
+                <a class="flex items-center px-6 py-2 mt-4 text-gray-100 bg-gray-700 bg-opacity-25"
                         href="./reservation.php">
                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -84,12 +84,15 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
         <div class="flex flex-col flex-1 overflow-hidden">
             <header class="flex items-center justify-between px-6 py-4 bg-white border-b-4 border-indigo-600">
                 <div class="flex items-center">
+                    
                     <button @click="sidebarOpen = true" class="text-gray-500 focus:outline-none lg:hidden">
                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"></path>
                         </svg>
+                        
                     </button>
+                 
     
                     <div class="relative mx-4 lg:mx-0">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -116,6 +119,13 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                                 src="https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=296&amp;q=80"
                                 alt="Your avatar">
                         </button>
+                        <?php if ( isset($_SESSION['email'])): ?>
+                                <div class="relative group">
+                                    <p class="text-gray-600">Welcome back, <?= htmlspecialchars($_SESSION['full_Name']); ?></p>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-gray-600">Welcome, Guest!</p>
+                        <?php endif; ?>
     
                         <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 z-10 w-full h-full"
                             style="display: none;"></div>
@@ -123,18 +133,56 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                         <div x-show="dropdownOpen"
                             class="absolute right-0 z-10 w-48 mt-2 overflow-hidden bg-white rounded-md shadow-xl"
                             style="display: none;">
-                            <a href="#"
+                            <a id="profile" href="#"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Profile</a>
-                            <a href="#"
+                            <a href="logout.php"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Logout</a>
                         </div>
                     </div>
                 </div>
             </header>
+            <div id="profileForm"
+                    class="hidden fixed inset-0 flex items-center justify-center z-50 bg-gray-700 bg-opacity-50">
+                    <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+                    <div class="flex justify-between">
+                        <h1 class="text-2xl font-bold text-center mb-1">Modifier les Informations du Chef</h1>
+                        <strong id="close" class="bg-red-500 p-2 rounded cursor-pointer">X</strong>
+                        </div>
+                        <form action="update_profile.php" method="POST" enctype="multipart/form-data" class="space-y-4 mt-2">
+                            <div>
+                                <label for="fullName" class="block text-sm font-semibold">Nom Complet</label>
+                                <input type="text" id="fullName" name="fullName" required
+                                    class="w-full px-4 py-2 mt-2 border rounded-md"
+                                    value="<?= $_SESSION['full_Name'] ?? ''; ?>" />
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-sm font-semibold">Email</label>
+                                <input type="email" id="email" name="email" required
+                                    class="w-full px-4 py-2 mt-2 border rounded-md"
+                                    value="<?= $_SESSION['email'] ?? ''; ?>" />
+                            </div>
+
+                            <div>
+                                <label for="profileImage" class="block text-sm font-semibold">Image de Profil</label>
+                                <input type="file" id="profileImage" name="profileImage"
+                                    class="w-full px-4 py-2 mt-2 border rounded-md" />
+                            </div>
+
+                            <div class="flex justify-center">
+                                <button type="submit" name="submit"
+                                    class="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                    Modifier
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
                 <div class="container px-6 py-8 mx-auto">
-                    <h3 class="text-3xl font-medium text-gray-700">Reservations</h3>
-    
+                    <div class="flex items-center justify-between">
+                          <h3 class="text-3xl font-medium text-gray-700">Reservations</h3>
+                        </div>
                     <div class="mt-4">
                         <div class="flex flex-wrap -mx-6">
                            
@@ -173,12 +221,13 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                                             </tr>
                                         </thead>
     
-                                    <tbody class="bg-white ">
+                                        <tbody class="bg-white">
                                             <?php
-                                            $sql = "SELECT R.ReservationDate,R.NumberOfPeople,R.Status,u.full_Name,M.Title FROM Reservations
-                                            inner join users on R.UserID = u.UserID
-                                            inner join Menu on R.MenuID = M.MenuID
-                                            ";
+                                            $sql = "SELECT R.ReservationDate, R.NumberOfPeople, R.Status, u.full_Name AS client, M.Title AS Menu, u.UserID 
+                                                    FROM Reservations R
+                                                    INNER JOIN users u ON R.UserID = u.UserID
+                                                    INNER JOIN Menu M ON R.MenuID = M.MenuID";
+
                                             $stmt = $connect->prepare($sql);
                                             $stmt->execute();
                                             $result = $stmt->get_result();
@@ -188,50 +237,33 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                                                     ?>
                                                     <tr>
                                                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                            <div class="flex items-center">
-                                                                <div class="flex-shrink-0 w-10 h-10">
-                                                                    <img class="w-10 h-10 rounded-full"
-                                                                        src="<?php echo htmlspecialchars($reservation['chef']); ?>"
-                                                                        alt="User Profile">
-                                                                </div>
+                                                            <div class="text-sm font-medium leading-5 text-gray-900">
+                                                                <?php echo htmlspecialchars($reservation['client']); ?>
                                                             </div>
                                                         </td>
-                                                        <td>
-                                                            <div class="ml-4">
-                                                                <div class="text-sm font-medium leading-5 text-gray-900">
-                                                                    <?php echo htmlspecialchars($reservation['client']); ?>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
+                                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                                             <div class="text-sm leading-5 text-gray-500">
                                                                 <?php echo htmlspecialchars($reservation['Menu']); ?>
                                                             </div>
                                                         </td>
-
-                                                        <td>
+                                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                                             <div class="text-sm leading-5 text-gray-500">
                                                                 <?php echo htmlspecialchars($reservation['NumberOfPeople']); ?>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                                             <div class="text-sm leading-5 text-gray-500">
                                                                 <?php echo htmlspecialchars($reservation['ReservationDate']); ?>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                                             <div class="text-sm leading-5 text-gray-500">
                                                                 <?php echo htmlspecialchars($reservation['Status']); ?>
                                                             </div>
                                                         </td>
-                                                        
-                                                       
-                                                        <td
-                                                            class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
-                                                            <a href="edit_user.php?id=<?php echo $reservation['UserID']; ?>"
-                                                                class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                                            <a href="edit_user.php?id=<?php echo $reservation['UserID']; ?>"
-                                                                class="text-red-600 hover:text-red-900 pl-2">Delete</a>
+                                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                                            <a href="edit_user.php?id=<?php echo $reservation['UserID']; ?>" class="text-indigo-600 hover:text-indigo-900">accepter </a>
+                                                            <a href="delete_user.php?id=<?php echo $reservation['UserID']; ?>" class="text-red-600 hover:text-red-900 pl-2">refuser</a>
                                                         </td>
                                                     </tr>
                                                     <?php
@@ -239,9 +271,8 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                                             } else {
                                                 ?>
                                                 <tr>
-                                                    <td colspan="5"
-                                                        class="px-6 py-4 text-center text-sm leading-5 text-gray-500 border-b border-gray-200">
-                                                        No users found.
+                                                    <td colspan="6" class="px-6 py-4 text-center text-sm leading-5 text-gray-500 border-b border-gray-200">
+                                                        No reservations found.
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -250,6 +281,7 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
                                             $stmt->close();
                                             ?>
                                         </tbody>
+
                                 </table>
                             </div>
                         </div>
@@ -259,5 +291,7 @@ if (!isset($_SESSION['user_id']) || (int)$_SESSION['RoleID'] !== 2) {
         </div>
     </div>
 </div>
+<script src="./js/index.js"></script>
+
 </body>
 </html>

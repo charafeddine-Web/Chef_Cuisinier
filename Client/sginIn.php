@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 				<!-- <input type="text" name="name" placeholder="Your name" required> -->
 				<input type="email" name="email" placeholder="Email" required>
 				<input type="password" name="password" placeholder="Password" required>
-				<button type="submit" name="submit" class="signup-btn">CREATE AN ACCOUNT</button>
+				<button type="submit" name="submit" class="signup-btn">Sign In</button>
 				<p>or sign in with</p>
 				<div class="social-buttons">
 					<button class="social-btn twitter-btn">Twitter</button>
