@@ -93,7 +93,6 @@ $result_res = $stmt->get_result();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $reservationID = intval($_POST['id']);
 
-    // Fetch reservation details
     $sql = "SELECT * FROM Reservations WHERE ReservationID = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("i", $reservationID);
@@ -113,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $reservationDate = $_POST['ReservationDate'];
     $status = $_POST['Status'];
 
-    // Update reservation
     $sql = "UPDATE Reservations SET NumberOfPeople = ?, ReservationDate = ?, Status = ? WHERE ReservationID = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("issi", $numberOfPeople, $reservationDate, $status, $reservationID);

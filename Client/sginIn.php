@@ -148,7 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 				</div>
 			<?php endif; ?>
 			<form action="sginIn.php" method="post">
-				<!-- <input type="text" name="name" placeholder="Your name" required> -->
 				<input type="email" name="email" placeholder="Email" required>
 				<input type="password" name="password" placeholder="Password" required>
 				<button type="submit" name="submit" class="signup-btn">Sign In</button>
@@ -161,19 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 			</form>
 		</div>
 	</div>
-	<!-- <footer class="container">
-		<div class="row only-mobile">
-			<div class="col-6">
-				<a class="btn btn-primary btn-block text-center" href="tel:++390000000"><i class="fa fa-phone"
-						aria-hidden="true"></i> Call</a>
-			</div>
-			<div class="col-6">
-				<a class="btn btn-success btn-block text-center"
-					href="https://api.whatsapp.com/send?phone=+390000000"><i class="fab fa-whatsapp"
-						aria-hidden="true"></i> Whatsapp</a>
-			</div>
-		</div>
-	</footer> -->
+	
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
 		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"

@@ -2,9 +2,6 @@
 require('./connection.php');
 
 
-
-
-
 ?>
 
 <html>
@@ -16,7 +13,6 @@ require('./connection.php');
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link href='https://fonts.googleapis.com/css?family=Merienda' rel='stylesheet'>
 	<link href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" rel="stylesheet">
-	<!-- <script src="https://cdn.tailwindcss.com"></script> -->
 	<title>Italian Chef | charaf eddine</title>
 	<link rel="icon" href="images/logo.png">
 </head>
@@ -106,8 +102,7 @@ require('./connection.php');
 			</a>
 		</div>
 	</div>
-	<!--- End of Carousel -->
-	<!--- Restaurant-->
+	
 	<div class="container">
 		<div class="row" id="Restaurant">
 			<div class="col navMenu">
@@ -148,8 +143,7 @@ require('./connection.php');
 		</div>
 
 
-		<!--- End of Restaurant -->
-		<!--- Start of Menu-->
+		
 		<div class="row" id="Menu">
 			<div class="col navMenu">
 				<h2 class="text-center">~ Menu ~</h2>
@@ -192,8 +186,7 @@ require('./connection.php');
 			
 			
 		</div>
-		<!--- End of Menu -->
-		<!--- Start of Reservation-->
+		
 		<div class="row" id="Reservation">
 			<div class="col navMenu">
 				<h2 class="text-center">~ Reservation ~</h2>
@@ -245,8 +238,7 @@ require('./connection.php');
 				</form>
 			</div>
 		</div>
-		<!--- End of Reserve -->
-		<!--- Start of Our Location -->
+	
 		<div class="row" id="OurLocation">
 			<div class="col navMenu">
 				<h2 class="text-center">~ Our Location ~</h2>

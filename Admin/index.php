@@ -330,7 +330,7 @@ if (!isset($_SESSION['user_id']) || (int) $_SESSION['RoleID'] !== 2) {
 
         <div class="mx-5">
             <?php
-            $sql = "SELECT count(*) as total_Menu FROM Reservations WHERE Status = 'Pending'"; // Adjust query for 'Pending' status
+            $sql = "SELECT count(*) as total_Menu FROM Reservations WHERE Status = 'Pending'"; 
             $stmt = $connect->prepare($sql);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -357,7 +357,7 @@ if (!isset($_SESSION['user_id']) || (int) $_SESSION['RoleID'] !== 2) {
 
         <div class="mx-5">
             <?php
-            $sql = "SELECT count(*) as total_Menu FROM Reservations WHERE Status = 'Approved'"; // Adjust query for 'Approved' status
+            $sql = "SELECT count(*) as total_Menu FROM Reservations WHERE Status = 'Approved'"; 
             $stmt = $connect->prepare($sql);
             $stmt->execute();
             $result = $stmt->get_result();

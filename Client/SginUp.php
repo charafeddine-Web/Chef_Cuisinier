@@ -66,7 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <title>Register Page</title>
     <link rel="stylesheet" href="./css/login.css">
     <link rel="stylesheet" type="text/css" href="./css/style.css">
-	<!-- <script src="https://cdn.tailwindcss.com"></script> -->
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar fixed-top navbar-light bg-light">
