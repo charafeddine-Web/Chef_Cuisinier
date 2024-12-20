@@ -23,7 +23,6 @@ require('./connection.php');
 
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
 	<div id="Welcome">
-		<!---Start navigation Bar -->
 		<nav class="navbar navbar-expand-lg navbar fixed-top  navbar-light bg-light">
 			<a class="navbar-brand" href="#Welcome">
 				<img src="images/logo.png" width="50" height="50" class="d-inline-block" alt=""> Chef Italian
@@ -63,8 +62,7 @@ require('./connection.php');
 				</ul>
 			</div>
 		</nav>
-		<!--- End Navigation Bar -->
-		<!--- Start Carousel -->
+		
 		<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
 			<ol class="carousel-indicators">
 				<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -263,7 +261,6 @@ require('./connection.php');
 				<p>charafeddine@example.com</p>
 			</div>
 		</div>
-		<!--- End of Our Location -->
 		<div class="row footer bg-light">
 			<div class="col">
 				<p class="text-center">Follow us: <a class="social-icon" href=""><i class="fab fa-facebook"></i></a> <a

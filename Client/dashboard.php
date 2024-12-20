@@ -79,6 +79,51 @@ $stmt = $connect->prepare($sql);
 $stmt->bind_param("i", $userID);
 $stmt->execute();
 $result_res = $stmt->get_result();
+
+
+
+
+
+/*edit*/
+
+
+
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+    $reservationID = intval($_POST['id']);
+
+    // Fetch reservation details
+    $sql = "SELECT * FROM Reservations WHERE ReservationID = ?";
+    $stmt = $connect->prepare($sql);
+    $stmt->bind_param("i", $reservationID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $reservation = $result->fetch_assoc();
+    } else {
+        die("Reservation not found.");
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
+    $reservationID = intval($_POST['id']);
+    $numberOfPeople = intval($_POST['NumberOfPeople']);
+    $reservationDate = $_POST['ReservationDate'];
+    $status = $_POST['Status'];
+
+    // Update reservation
+    $sql = "UPDATE Reservations SET NumberOfPeople = ?, ReservationDate = ?, Status = ? WHERE ReservationID = ?";
+    $stmt = $connect->prepare($sql);
+    $stmt->bind_param("issi", $numberOfPeople, $reservationDate, $status, $reservationID);
+
+    if ($stmt->execute()) {
+        header("Location: reservations.php?message=Reservation+updated+successfully");
+    } else {
+        echo "Failed to update reservation.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -175,47 +220,49 @@ $result_res = $stmt->get_result();
         </div>
     </section>
 
-
     <section id="menu" class="py-16">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-gray-800 mb-10 text-center">Our Signature Menu</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php
-                $sql = "SELECT * FROM Menu";
-                $stmt = $connect->prepare($sql);
-                if ($stmt->execute()) {
-                    $result = $stmt->get_result();
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $menuID = $row['MenuID'];
-                            echo "<div class='bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer' onclick='showModal(\"menu-$menuID\")'>";
-                            echo "<img src='" . htmlspecialchars($row['MenuImage'], ENT_QUOTES, 'UTF-8') . "' alt='Dish Image' class='w-full h-48 object-cover'>";
-                            echo "<div class='p-6'>";
-                            echo "<h3 class='text-xl font-bold text-gray-800 mb-2'>" . htmlspecialchars($row['Title'], ENT_QUOTES, 'UTF-8') . "</h3>";
-                            echo "<p class='text-gray-600 mb-4'>" . htmlspecialchars($row['Description'], ENT_QUOTES, 'UTF-8') . "</p>";
-                            echo "<p class='text-lg font-semibold text-blue-600'>$" . htmlspecialchars($row['Price'], ENT_QUOTES, 'UTF-8') . "</p>";
-                            echo "</div>";
-                            echo "</div>";
+    <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-800 mb-10 text-center">Our Signature Menu</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <?php
+            $sql = "SELECT * FROM Menu";
+            $stmt = $connect->prepare($sql);
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $menuID = $row['MenuID'];
+                        echo "<div class='bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer' onclick='showModal(\"menu-$menuID\")'>";
+                        echo "<img src='" . htmlspecialchars($row['MenuImage'], ENT_QUOTES, 'UTF-8') . "' alt='Dish Image' class='w-full h-48 object-cover'>";
+                        echo "<div class='p-6'>";
+                        echo "<h3 class='text-xl font-bold text-gray-800 mb-2'>" . htmlspecialchars($row['Title'], ENT_QUOTES, 'UTF-8') . "</h3>";
+                        echo "<p class='text-gray-600 mb-4'>" . htmlspecialchars($row['Description'], ENT_QUOTES, 'UTF-8') . "</p>";
+                        echo "<p class='text-lg font-semibold text-blue-600'>$" . htmlspecialchars($row['Price'], ENT_QUOTES, 'UTF-8') . "</p>";
+                        echo "</div>";
+                        echo "</div>";
 
-                            // Hidden modal data
-                            echo "<div id='menu-$menuID' class='hidden modal-data'>";
-                            echo "<img src='" . htmlspecialchars($row['MenuImage'], ENT_QUOTES, 'UTF-8') . "' alt='Dish Image' class='w-full h-48 object-cover mb-4'>";
-                            echo "<h3 class='text-2xl font-bold text-gray-800 mb-2'>" . htmlspecialchars($row['Title'], ENT_QUOTES, 'UTF-8') . "</h3>";
-                            echo "<p class='text-gray-600 mb-4'>" . htmlspecialchars($row['Description'], ENT_QUOTES, 'UTF-8') . "</p>";
-                            echo "<p class='text-lg font-semibold text-blue-600 mb-4'>$" . htmlspecialchars($row['Price'], ENT_QUOTES, 'UTF-8') . "</p>";
-                            echo "<button class='mt-4 w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700' onclick='showReservationModal($menuID)'>Reserve Now</button>";
-                            echo "</div>";
-                        }
-                    } else {
-                        echo "<p class='text-gray-600'>No menu items available at the moment.</p>";
+                        // Hidden modal data
+                        echo "<div id='menu-$menuID' class='hidden modal-data'>";
+                        echo "<img src='" . htmlspecialchars($row['MenuImage'], ENT_QUOTES, 'UTF-8') . "' alt='Dish Image' class='w-full h-48 object-cover mb-4'>";
+                        echo "<h3 class='text-2xl font-bold text-gray-800 mb-2'>" . htmlspecialchars($row['Title'], ENT_QUOTES, 'UTF-8') . "</h3>";
+                        echo "<p class='text-gray-600 mb-4'>" . htmlspecialchars($row['Description'], ENT_QUOTES, 'UTF-8') . "</p>";
+                        echo "<p class='text-lg font-semibold text-blue-600 mb-4'>$" . htmlspecialchars($row['Price'], ENT_QUOTES, 'UTF-8') . "</p>";
+                        echo "<button class='mt-4 w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700' onclick='showReservationModal($menuID)'>Reserve Now</button>";
+                        echo "</div>";
                     }
                 } else {
-                    echo "<p class='text-red-600'>Failed to fetch menu data. Please try again later.</p>";
+                    echo "<p class='text-gray-600'>No menu items available at the moment.</p>";
                 }
-                ?>
-            </div>
+            } else {
+                echo "<p class='text-red-600'>Failed to fetch menu data. Please try again later.</p>";
+            }
+            ?>
         </div>
-    </section>
+    </div>
+</section>
+
+
+
 
     <div id="menuModal" class="hidden fixed inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center z-50">
         <button id='closeModal'
@@ -257,13 +304,11 @@ $result_res = $stmt->get_result();
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Reservations</h2>
-        <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+        <div class="overflow-hidden bg-white shadow sm:rounded-lg overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 overflow-x-auto">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Reservation ID
-                        </th>
+                       
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Menu Item
                         </th>
@@ -288,28 +333,34 @@ $result_res = $stmt->get_result();
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <?php
+                <?php
                     if ($result_res->num_rows > 0) {
                         while ($row = $result_res->fetch_assoc()) {
                             echo "<tr class='hover:bg-gray-50'>";
-                            echo "<td class='px-6 py-4 text-sm text-gray-700'>" . $row['ReservationID'] . "</td>";
-                            echo "<td class='px-6 py-4 text-sm text-gray-700'>" . $row['Title'] . "</td>";
+                            echo "<td class='px-6 py-4 text-sm text-gray-700'>" . htmlspecialchars($row['Title'], ENT_QUOTES, 'UTF-8') . "</td>";
                             echo "<td class='px-6 py-4 text-sm text-gray-700'>$" . number_format($row['Price'], 2) . "</td>";
-                            echo "<td class='px-6 py-4 text-sm text-gray-700'>" . $row['ChefName'] . "</td>";
+                            echo "<td class='px-6 py-4 text-sm text-gray-700'>" . htmlspecialchars($row['ChefName'], ENT_QUOTES, 'UTF-8') . "</td>";
                             echo "<td class='px-6 py-4 text-sm text-gray-700'>" . $row['NumberOfPeople'] . "</td>";
                             echo "<td class='px-6 py-4 text-sm text-gray-700'>" . $row['ReservationDate'] . "</td>";
-                            echo "<td class='px-6 py-4 text-sm text-" . ($row['Status'] == 'Approved' ? 'green' : ($row['Status'] == 'Rejected' ? 'red' : 'yellow')) . "-600'>" . $row['Status'] . "</td>";
+                            echo "<td class='px-6 py-4 text-sm text-" . ($row['Status'] === 'Approved' ? 'green' : ($row['Status'] === 'Rejected' ? 'red' : 'yellow')) . "-600'>" . $row['Status'] . "</td>";
                             echo "<td class='px-6 py-4 text-sm'>
-                                    <button class='text-green-900 hover:underline hover:text-blue-800 p-2 bg-green-500 rounded'>Edit</button>
-                                    <button class='ml-2 text-red-900 hover:underline hover:text-red-800  p-2 bg-red-500 rounded'>Cancel</button>
-                                  </td>";
+                                    <form method='POST' action='edit_reservation.php' style='display:inline;'>
+                                        <input type='hidden' name='id' value='" . htmlspecialchars($row['ReservationID'], ENT_QUOTES, 'UTF-8') . "'>
+                                        <button type='submit' class='text-green-900 hover:underline hover:text-blue-800 p-2 bg-green-500 rounded'>Edit</button>
+                                    </form>
+                                    <form method='POST' action='cenled_reservation.php' style='display:inline; margin-left: 8px;'>
+                                        <input type='hidden' name='id' value='" . htmlspecialchars($row['ReservationID'], ENT_QUOTES, 'UTF-8') . "'>
+                                        <button type='submit' class='text-red-900 hover:underline hover:text-red-800 p-2 bg-red-500 rounded'>Cancel</button>
+                                    </form>
+                                </td>";
                             echo "</tr>";
                         }
                     } else {
                         echo "<tr><td colspan='9' class='px-6 py-4 text-center text-gray-700'>No Reservations Found</td></tr>";
                     }
                     ?>
-                </tbody>
+
+</tbody>
             </table>
         </div>
     </div>

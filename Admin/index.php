@@ -320,92 +320,87 @@ if (!isset($_SESSION['user_id']) || (int) $_SESSION['RoleID'] !== 2) {
                                     </div>
                                 </div>
                                 <div class="w-full px-6 mt-6 sm:w-1/2 xl:w-1/3 sm:mt-4">
-                                    <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-sm">
-                                        <div class="p-3 bg-blue-600 bg-opacity-75 rounded-full">
-                                            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24" fill="none">
-                                                <path
-                                                    d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16z"
-                                                    fill="currentColor" />
-                                                <path d="M11 6h2v6h-2zM11 14h2v2h-2z" fill="currentColor" />
-                                            </svg>
-                                        </div>
+    <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-sm">
+        <div class="p-3 bg-blue-600 bg-opacity-75 rounded-full">
+            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16z" fill="currentColor" />
+                <path d="M11 6h2v6h-2zM11 14h2v2h-2z" fill="currentColor" />
+            </svg>
+        </div>
 
-                                        <div class="mx-5">
-                                            <?php
-                                            $sql = "SELECT count(*) as total_Menu FROM Menu";
-                                            $stmt = $connect->prepare($sql);
-                                            $stmt->execute();
-                                            $result = $stmt->get_result();
+        <div class="mx-5">
+            <?php
+            $sql = "SELECT count(*) as total_Menu FROM Reservations WHERE Status = 'Pending'"; // Adjust query for 'Pending' status
+            $stmt = $connect->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-                                            if ($result->num_rows > 0) {
-                                                $data = $result->fetch_assoc();
-                                                echo "<h4 class='text-2xl font-semibold text-gray-700'>" . $data['total_Menu'] . "</h4>";
-                                            } else {
-                                                echo "<h4 class='text-2xl font-semibold text-gray-700'>0</h4>";
-                                            }
-                                            ?>
-                                            <div class="text-gray-500">Demandes en attente</div>
-                                        </div>
-                                    </div>
-                                </div>
+            if ($result->num_rows > 0) {
+                $data = $result->fetch_assoc();
+                echo "<h4 class='text-2xl font-semibold text-gray-700'>" . $data['total_Menu'] . "</h4>";
+            } else {
+                echo "<h4 class='text-2xl font-semibold text-gray-700'>0</h4>";
+            }
+            ?>
+            <div class="text-gray-500">Demandes en attente</div>
+        </div>
+    </div>
+</div>
 
-                                <div class="w-full px-6 mt-6 sm:w-1/2 xl:w-1/3 sm:mt-4">
-                                    <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-sm">
-                                        <div class="p-3 bg-green-600 bg-opacity-75 rounded-full">
-                                            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24" fill="none">
-                                                <path d="M12 4a8 8 0 110 16 8 8 0 010-16zm-1 4h2v4h-2zM11 14h2v2h-2z"
-                                                    fill="currentColor" />
-                                            </svg>
-                                        </div>
+<div class="w-full px-6 mt-6 sm:w-1/2 xl:w-1/3 sm:mt-4">
+    <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-sm">
+        <div class="p-3 bg-green-600 bg-opacity-75 rounded-full">
+            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                <path d="M12 4a8 8 0 110 16 8 8 0 010-16zm-1 4h2v4h-2zM11 14h2v2h-2z" fill="currentColor" />
+            </svg>
+        </div>
 
-                                        <div class="mx-5">
-                                            <?php
-                                            $sql = "SELECT count(*) as total_Menu FROM Menu";
-                                            $stmt = $connect->prepare($sql);
-                                            $stmt->execute();
-                                            $result = $stmt->get_result();
+        <div class="mx-5">
+            <?php
+            $sql = "SELECT count(*) as total_Menu FROM Reservations WHERE Status = 'Approved'"; // Adjust query for 'Approved' status
+            $stmt = $connect->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-                                            if ($result->num_rows > 0) {
-                                                $data = $result->fetch_assoc();
-                                                echo "<h4 class='text-2xl font-semibold text-gray-700'>" . $data['total_Menu'] . "</h4>";
-                                            } else {
-                                                echo "<h4 class='text-2xl font-semibold text-gray-700'>0</h4>";
-                                            }
-                                            ?>
-                                            <div class="text-gray-500">Demandes la journée</div>
-                                        </div>
-                                    </div>
-                                </div>
+            if ($result->num_rows > 0) {
+                $data = $result->fetch_assoc();
+                echo "<h4 class='text-2xl font-semibold text-gray-700'>" . $data['total_Menu'] . "</h4>";
+            } else {
+                echo "<h4 class='text-2xl font-semibold text-gray-700'>0</h4>";
+            }
+            ?>
+            <div class="text-gray-500">Demandes la journée</div>
+        </div>
+    </div>
+</div>
 
-                                <div class="w-full px-6 mt-6 sm:w-1/2 xl:w-1/3 sm:mt-4">
-                                    <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-sm">
-                                        <div class="p-3 bg-red-800 bg-opacity-75 rounded-full">
-                                            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24" fill="none">
-                                                <path d="M11 4h2v6h-2zM11 12h2v6h-2z" fill="currentColor" />
-                                            </svg>
-                                        </div>
+<div class="w-full px-6 mt-6 sm:w-1/2 xl:w-1/3 sm:mt-4">
+    <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-sm">
+        <div class="p-3 bg-red-800 bg-opacity-75 rounded-full">
+            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                <path d="M11 4h2v6h-2zM11 12h2v6h-2z" fill="currentColor" />
+            </svg>
+        </div>
 
-                                        <div class="mx-5">
-                                            <?php
-                                            $sql = "SELECT count(*) as total_Menu FROM Menu";
-                                            $stmt = $connect->prepare($sql);
-                                            $stmt->execute();
-                                            $result = $stmt->get_result();
+        <div class="mx-5">
+            <?php
+            $sql = "SELECT count(*) as total_Menu FROM Reservations WHERE Status = 'Rejected'"; 
+            $stmt = $connect->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-                                            if ($result->num_rows > 0) {
-                                                $data = $result->fetch_assoc();
-                                                echo "<h4 class='text-2xl font-semibold text-gray-700'>" . $data['total_Menu'] . "</h4>";
-                                            } else {
-                                                echo "<h4 class='text-2xl font-semibold text-gray-700'>0</h4>";
-                                            }
-                                            ?>
-                                            <div class="text-gray-500">Demandes jour suivant</div>
-                                        </div>
-                                    </div>
-                                </div>
+            if ($result->num_rows > 0) {
+                $data = $result->fetch_assoc();
+                echo "<h4 class='text-2xl font-semibold text-gray-700'>" . $data['total_Menu'] . "</h4>";
+            } else {
+                echo "<h4 class='text-2xl font-semibold text-gray-700'>0</h4>";
+            }
+            ?>
+            <div class="text-gray-500">Demandes jour suivant</div>
+        </div>
+    </div>
+</div>
+
 
                             </div>
                         </div>
